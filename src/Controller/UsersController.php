@@ -3,6 +3,9 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use App\Model\Entity\User;
+use Cake\Validation\Validator;
+
 
 /**
  * Users Controller
@@ -15,7 +18,7 @@ class UsersController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow(
-            ['logout']
+            ['logout', 'signUp']
         );
     }
 
@@ -51,14 +54,23 @@ class UsersController extends AppController
      *
      * @return void Redirects on successful add, renders view otherwise.
      */
-    public function add()
+    public function signUp()
     {
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->data);
+            $user->set('password', User::hashPassword($user->get('password')));
+            $user->set('created_at', time());
+            $user->set('updated_at', time());
+
+            $validator = new Validator();
+            $validator = $this->Users->validationDefault($validator);
+            $errors = $validator->errors($this->request->data());
+            $this->set(compact('errors'));
+
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'login']);
             } else {
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }

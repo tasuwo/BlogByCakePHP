@@ -49,6 +49,9 @@ class UsersTable extends Table
         $validator
             ->allowEmpty('mail');
 
+        $validator
+            ->allowEmpty('password');
+
         return $validator;
     }
 }

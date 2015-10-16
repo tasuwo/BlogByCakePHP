@@ -34,5 +34,6 @@ CREATE TABLE users (
 	id INT AUTO_INCREMENT NOT NULL,
 	name VARCHAR(100) NOT NULL,
 	mail VARCHAR(300),
+    password VARCHAR(300),
 	PRIMARY KEY (id)
 );

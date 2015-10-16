@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * User Entity.
@@ -9,6 +10,7 @@ use Cake\ORM\Entity;
  * @property int $id
  * @property string $name
  * @property string $mail
+ * @property string $password
  */
 class User extends Entity
 {
@@ -22,8 +24,33 @@ class User extends Entity
      *
      * @var array
      */
-    protected $_accessible = [
-        '*' => true,
-        'id' => false,
-    ];
+    protected $_accessible
+        = [
+            '*' => true,
+            'id' => false,
+        ];
+
+    /**
+     * @param string $password
+     *
+     * @return bool|string
+     */
+    public static function hashPassword($password)
+    {
+        return (new DefaultPasswordHasher())->hash($password);
+    }
+
+    public $name = 'User';
+
+
+    public function beforeSave($options = array())
+    {
+        if (!$this->id) {
+            $passwordHasher = new SimplePasswordHasher();
+            $this->data['User']['password'] = $passwordHasher->hash(
+                $this->data['User']['password']
+            );
+        }
+        return true;
+    }
 }
