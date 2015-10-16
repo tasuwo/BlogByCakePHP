@@ -27,20 +27,39 @@ use Cake\Event\Event;
  */
 class AppController extends Controller
 {
-    public $helpers = [
-        'Html' => [
-            'className' => 'Bootstrap.BootstrapHtml'
-        ],
-        'Form' => [
-            'className' => 'Bootstrap.BootstrapForm'
-        ],
-        'Paginator' => [
-            'className' => 'Bootstrap.BootstrapPaginator'
-        ],
-        'Modal' => [
-            'className' => 'Bootstrap.BootstrapModal'
-        ]
-    ];
+    /**
+     * @var array
+     * @see \Cake\Controller\Component\AuthComponent::$components
+     */
+    public $components
+        = [
+            'Auth' => [
+                'authenticate' => [
+                    'Form' => [
+                        'fields' => [
+                            'username' => 'mail',
+                            'password' => 'password',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+    public $helpers
+        = [
+            'Html' => [
+                'className' => 'Bootstrap.BootstrapHtml'
+            ],
+            'Form' => [
+                'className' => 'Bootstrap.BootstrapForm'
+            ],
+            'Paginator' => [
+                'className' => 'Bootstrap.BootstrapPaginator'
+            ],
+            'Modal' => [
+                'className' => 'Bootstrap.BootstrapModal'
+            ]
+        ];
 
     /**
      * Initialization hook method.
@@ -60,16 +79,24 @@ class AppController extends Controller
         $this->viewBuilder()->autoLayout(false);
     }
 
+    public function isAuthorized($user = null)
+    {
+        return true;
+    }
+
     /**
      * Before render callback.
      *
      * @param \Cake\Event\Event $event The beforeRender event.
+     *
      * @return void
      */
     public function beforeRender(Event $event)
     {
-        if (!array_key_exists('_serialize', $this->viewVars) &&
-            in_array($this->response->type(), ['application/json', 'application/xml'])
+        if (!array_key_exists('_serialize', $this->viewVars)
+            && in_array(
+                $this->response->type(), ['application/json', 'application/xml']
+            )
         ) {
             $this->set('_serialize', true);
         }
