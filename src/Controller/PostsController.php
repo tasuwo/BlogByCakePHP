@@ -63,6 +63,7 @@ class PostsController extends AppController
                 $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
         }
+
         $tags = $this->Posts->Tags->find('list', ['limit' => 200]);
         $this->set(compact('post', 'tags'));
         $this->set('_serialize', ['post']);

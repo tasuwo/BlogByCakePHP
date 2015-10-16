@@ -55,6 +55,31 @@
                     );
                     ?>
                 </li>
+                <?php if ($this->request->session()->read('Auth.User')): ?>
+                    <li>
+                        <?=
+                        $this->Html->link(
+                            'Sign out',
+                            array(
+                                'controller' => 'Users',
+                                'action' => 'logout'
+                            )
+                        );
+                        ?>
+                    </li>
+                    <?php else: ?>
+                    <li>
+                        <?=
+                        $this->Html->link(
+                            'Sign in',
+                            array(
+                                'controller' => 'Users',
+                                'action' => 'login'
+                            )
+                        );
+                        ?>
+                    </li>
+                <?php endif; ?>
             </ul>
             <form class="navbar-form navbar-right">
                 <input type="text" class="form-control" placeholder="Search...">
