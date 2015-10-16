@@ -11,6 +11,7 @@
         <?php
             echo $this->Form->input('name');
             echo $this->Form->input('mail');
+            echo $this->Form->input('password');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

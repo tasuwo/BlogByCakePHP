@@ -34,37 +34,70 @@
                                 <?= h($post->created_at) ?>
                             </p>
 
-                            <p><i class="fa fa-tags"></i> Tags: <a href=""><span
-                                        class="badge badge-info">Bootstrap</span></a>
-                                <a
-                                    href=""><span
-                                        class="badge badge-info">Web</span></a>
-                                <a
-                                    href=""><span
-                                        class="badge badge-info">CSS</span></a>
-                                <a
-                                    href=""><span
-                                        class="badge badge-info">HTML</span></a>
+                            <p><i class="fa fa-tags"></i>
+                                Tags: <a href="">
+                                    <span class="badge badge-info">
+                                        Bootstrap
+                                    </span>
+                                </a>
+                                <a href="">
+                                    <span class="badge badge-info">
+                                        Web
+                                    </span>
+                                </a>
+                                <a href="">
+                                    <span class="badge badge-info">
+                                        CSS
+                                    </span>
+                                </a>
+                                <a href="">
+                                    <span class="badge badge-info">
+                                        HTML
+                                    </span>
+                                </a>
                             </p>
                             <hr>
                             <p class="lead"><?= h($post->body) ?></p>
-                            <hr>
-
                             <?= $this->Html->link(
-                                __('View'), ['action' => 'view', $post->id]
-                            ) ?>
-                            <?= $this->Html->link(
-                                __('Edit'), ['action' => 'edit', $post->id]
-                            ) ?>
-                            <?= $this->Form->postLink(
-                                __('Delete'), ['action' => 'delete', $post->id],
+                                'Read on →',
                                 [
-                                    'confirm' => __(
-                                        'Are you sure you want to delete # {0}?',
-                                        $post->id
-                                    )
+                                    'action' => 'view',
+                                    $post->id
+                                ],
+                                [
+                                    'class' => "btn btn-default btn-primary"
                                 ]
                             ) ?>
+                            <?php if ($this->request->session()->read(
+                                'Auth.User'
+                            )
+                            ): ?>
+                                <hr>
+                                <?= $this->Html->link(
+                                    __('Edit'),
+                                    [
+                                        'action' => 'edit',
+                                        $post->id
+                                    ],
+                                    [
+                                        'class' => "btn btn-default btn-success"
+                                    ]
+                                ) ?>
+                                <?= $this->Form->postLink(
+                                    __('Delete'),
+                                    [
+                                        'action' => 'delete',
+                                        $post->id
+                                    ],
+                                    [
+                                        'confirm' => __(
+                                            'Are you sure you want to delete # {0}?',
+                                            $post->id
+                                        ),
+                                        'class' => "btn btn-default btn-danger"
+                                    ]
+                                ) ?>
+                            <?php endif; ?>
                         </div>
                     </tr>
                 <?php endforeach; ?>
