@@ -52,3 +52,44 @@ $ bin/cake server
 After that, open up **http://localhost:8765/posts/** in your web browser, you'll see the posts screen.
 If not, you may need to install additional PHP extensions, or set directory permissions.
 
+##Trouble Shooting
+
+###PHP extention intl is missing
+
+If you get the following error, you should install `intl`.
+
+```
+Your requirements could not be resolved to an installable set of packages.
+
+Problem 1
+ - cakephp/cakephp 3.0.x-dev reqyures ext-intl * -> the requested PHP extention intl is missing from your system.
+ ...
+
+```
+
+* Mac users
+	* `$ sudo pecl install intl`
+
+* Win users
+	* uncomment the line `;extention=php_intl.dll` in `php.ini`
+
+Check that your installation is complete by running the following command.
+
+```bash
+$ php -m | grep intl
+intl
+```
+
+###Unable to detect ICU
+
+```
+checking for location of ICU headers and libraries... not found
+configure: error: Unable to detect ICU prefix or ./bin/icu-config failed. Please verify ICU install prefix and make sure icu-config works.
+```
+
+Install ICU by [homebrew](http://brew.sh/)
+
+```bash
+$ brew install icu4c
+$ brew link icu4c
+```
