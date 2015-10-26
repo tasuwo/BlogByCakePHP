@@ -1,98 +1,86 @@
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Post'), ['action' => 'edit', $post->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Post'), ['action' => 'delete', $post->id], ['confirm' => __('Are you sure you want to delete # {0}?', $post->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Posts'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Post'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Comments'), ['controller' => 'Comments', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Comment'), ['controller' => 'Comments', 'action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Tags'), ['controller' => 'Tags', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Tag'), ['controller' => 'Tags', 'action' => 'add']) ?> </li>
-    </ul>
-</nav>
-<div class="posts view large-9 medium-8 columns content">
-    <h3><?= h($post->title) ?></h3>
-    <table class="vertical-table">
-        <tr>
-            <th><?= __('Title') ?></th>
-            <td><?= h($post->title) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Id') ?></th>
-            <td><?= $this->Number->format($post->id) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Created At') ?></th>
-            <td><?= h($post->created_at) ?></tr>
-        </tr>
-        <tr>
-            <th><?= __('Updated At') ?></th>
-            <td><?= h($post->updated_at) ?></tr>
-        </tr>
-    </table>
+<!DOCTYPE html>
+<html>
+<head>
+    <?= $this->Html->charset() ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?= $this->Html->css('bootstrap.min.css') ?>
+    <?= $this->Html->css('dashboard.css') ?>
+    <link
+        href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
+        rel="stylesheet">
+</head>
+<body class="home">
+
+<?= $this->element('header') ?>
+
+<div class="container-fluid">
     <div class="row">
-        <h4><?= __('Body') ?></h4>
-        <?= $this->Text->autoParagraph(h($post->body)); ?>
-    </div>
-    <div class="related">
-        <h4><?= __('Related Comments') ?></h4>
-        <?php if (!empty($post->comments)): ?>
-        <table cellpadding="0" cellspacing="0">
-            <tr>
-                <th><?= __('Id') ?></th>
-                <th><?= __('Post Id') ?></th>
-                <th><?= __('User Name') ?></th>
-                <th><?= __('Body') ?></th>
-                <th><?= __('Created At') ?></th>
-                <th><?= __('Updated At') ?></th>
-                <th class="actions"><?= __('Actions') ?></th>
-            </tr>
-            <?php foreach ($post->comments as $comments): ?>
-            <tr>
-                <td><?= h($comments->id) ?></td>
-                <td><?= h($comments->post_id) ?></td>
-                <td><?= h($comments->user_name) ?></td>
-                <td><?= h($comments->body) ?></td>
-                <td><?= h($comments->created_at) ?></td>
-                <td><?= h($comments->updated_at) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'Comments', 'action' => 'view', $comments->id]) ?>
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+                <li class="active">
+                    <a href="#">Active<span class="sr-only">(current)</span></a>
+                </li>
+                <li><a href="#">Non-Active</a></li>
+            </ul>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <div class="well">
+                <h3><a href=""><?= h($post->title) ?></a></h3>
+                <hr>
+                <p><i class="fa fa-calendar"></i>
+                    <?= h($post->created_at) ?>
+                </p>
 
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Comments', 'action' => 'edit', $comments->id]) ?>
+                <p><i class="fa fa-tags"></i>
+                    Tags:
+                    <?php if (!empty($post->tags)): ?>
+                <table cellpadding="0" cellspacing="0">
+                    <?php foreach ($post->tags as $tags): ?>
+                        <a href="">
+                        <span class="badge badge-info">
+                            <?= h($tags->name) ?>
+                        </span>
+                        </a>
+                    <?php endforeach; ?>
+                </table>
+                <?php endif; ?>
+                </p>
+                <hr>
+                <p class="lead"><?= h($post->body) ?></p>
+            </div>
 
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Comments', 'action' => 'delete', $comments->id], ['confirm' => __('Are you sure you want to delete # {0}?', $comments->id)]) ?>
-
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif; ?>
-    </div>
-    <div class="related">
-        <h4><?= __('Related Tags') ?></h4>
-        <?php if (!empty($post->tags)): ?>
-        <table cellpadding="0" cellspacing="0">
-            <tr>
-                <th><?= __('Id') ?></th>
-                <th><?= __('Name') ?></th>
-                <th class="actions"><?= __('Actions') ?></th>
-            </tr>
-            <?php foreach ($post->tags as $tags): ?>
-            <tr>
-                <td><?= h($tags->id) ?></td>
-                <td><?= h($tags->name) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['controller' => 'Tags', 'action' => 'view', $tags->id]) ?>
-
-                    <?= $this->Html->link(__('Edit'), ['controller' => 'Tags', 'action' => 'edit', $tags->id]) ?>
-
-                    <?= $this->Form->postLink(__('Delete'), ['controller' => 'Tags', 'action' => 'delete', $tags->id], ['confirm' => __('Are you sure you want to delete # {0}?', $tags->id)]) ?>
-
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </table>
-    <?php endif; ?>
+            <?php if (!empty($post->comments)): ?>
+                <table>
+                    <?php foreach ($post->comments as $comments): ?>
+                        <tr>
+                            <td class="col-sm-5">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <strong>
+                                            <?= h($comments->user_name) ?>
+                                        </strong>
+                                <span class="text-muted">
+                                    commented at
+                                    <?= h($comments->created_at) ?>
+                                </span>
+                                    </div>
+                                    <div class="panel-body">
+                                        <?= h($comments->body) ?>
+                                    </div>
+                                    <!-- /panel-body -->
+                                </div>
+                                <!-- /panel panel-default -->
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
+
+<script
+    src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<?= $this->Html->script('bootstrap.js') ?>
+</body>
+</html>
