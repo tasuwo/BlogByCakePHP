@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?= $this->Html->css('bootstrap.min.css') ?>
     <?= $this->Html->css('dashboard.css') ?>
+    <?= $this->Html->css('checkbox.css') ?>
+
     <link
         href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
         rel="stylesheet">
@@ -22,8 +24,28 @@
                 <?php
                 echo $this->Form->input('title');
                 echo $this->Form->input('body');
-                echo $this->Form->input('tags._ids', ['options' => $tags]);
                 ?>
+
+                <div class="col-md-4">
+                    <div class="col-md-6">
+                        <div class="funkyradio">
+                            <?php foreach ($tags as $tag): ?>
+                                <div class="funkyradio-primary">
+                                    <?= $this->Form->checkbox(
+                                        'tags[_ids][]',
+                                        [
+                                            'value' => $tag->id,
+                                            'id' => 'checkbox' . $tag->id,
+                                        ]
+                                    ) ?>
+                                    <label for=<?= 'checkbox' . $tag->id ?>>
+                                        <?= $tag->name ?>
+                                    </label>
+                                </div>
+                                <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>
             <?= $this->Form->end() ?>

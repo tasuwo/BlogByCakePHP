@@ -112,33 +112,35 @@ class PostsController extends AppController
     }
 
     /**
-     * Add method
-     *
-     * @return void Redirects on successful add, renders view otherwise.
+     * @throws \Exception
      */
     public function add()
     {
-        $post = $this->Posts->newEntity();
-        if ($this->request->is('post')) {
-            $now = new \DateTime();
+        $tagsTable = TableRegistry::get('Tags');
+        $postsTagsTable = TableRegistry::get('PostsTags');
 
+        $now = new \DateTime();
+
+        $tags = $tagsTable->find();
+        $post = $this->Posts->newEntity();
+
+        if ($this->request->is('post')) {
             $post = $this->Posts->patchEntity($post, $this->request->data);
             $post->updated_at = $now->format('Y-m-d H:i:s');
             $post->created_at = $now->format('Y-m-d H:i:s');
 
-            if ($this->Posts->save($post)) {
-                $this->Flash->success(__('The post has been saved.'));
+            if (!$this->Posts->save($post)) {
+                throw new \Exception('Failed to save post entity');
+            } else {
                 return $this->redirect(
                     [
-                        'action' => 'index'
+                        'action' => 'view',
+                        $post->id
                     ]
                 );
-            } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }
         }
 
-        $tags = $this->Posts->Tags->find('list', ['limit' => 200]);
         $this->set(compact('post', 'tags'));
         $this->set('_serialize', ['post']);
     }
