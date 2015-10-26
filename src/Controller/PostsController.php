@@ -50,6 +50,11 @@ class PostsController extends AppController
         $this->set('_serialize', ['post']);
     }
 
+    /**
+     * Post comment method
+     *
+     * @return \Cake\Network\Response|void
+     */
     public function postComment()
     {
         if ($this->request->is('post')) {
@@ -76,6 +81,14 @@ class PostsController extends AppController
         }
     }
 
+    /**
+     * Delete Comment method
+     *
+     * @param null $comment_id
+     * @param null $post_id
+     *
+     * @return \Cake\Network\Response|void
+     */
     public function deleteComment($comment_id = null, $post_id = null)
     {
         $commentTable = TableRegistry::get('Comments');
