@@ -19,6 +19,7 @@
     <fieldset>
         <legend><?= __('Edit Posts Tag') ?></legend>
         <?php
+            echo $this->Form->input('id');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

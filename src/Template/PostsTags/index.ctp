@@ -13,6 +13,7 @@
     <table cellpadding="0" cellspacing="0">
         <thead>
             <tr>
+                <th><?= $this->Paginator->sort('id') ?></th>
                 <th><?= $this->Paginator->sort('post_id') ?></th>
                 <th><?= $this->Paginator->sort('tag_id') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
@@ -21,6 +22,7 @@
         <tbody>
             <?php foreach ($postsTags as $postsTag): ?>
             <tr>
+                <td><?= $this->Number->format($postsTag->id) ?></td>
                 <td><?= $postsTag->has('post') ? $this->Html->link($postsTag->post->title, ['controller' => 'Posts', 'action' => 'view', $postsTag->post->id]) : '' ?></td>
                 <td><?= $postsTag->has('tag') ? $this->Html->link($postsTag->tag->name, ['controller' => 'Tags', 'action' => 'view', $postsTag->tag->id]) : '' ?></td>
                 <td class="actions">

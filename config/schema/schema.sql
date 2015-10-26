@@ -23,12 +23,11 @@ CREATE TABLE comments (
 	FOREIGN KEY post_key(post_id) REFERENCES posts(id)
 );
 CREATE TABLE posts_tags (
+	id INT NOT NULL AUTO_INCREMENT,
 	post_id INT NOT NULL,
 	tag_id INT NOT NULL,
-	UNIQUE(post_id, tag_id),
-	PRIMARY KEY(post_id, tag_id),
-	FOREIGN KEY post_key(post_id) REFERENCES posts(id),
-	FOREIGN KEY tag_key(tag_id) REFERENCES tags(id)
+	PRIMARY KEY(id),
+	UNIQUE(post_id, tag_id)
 );
 CREATE TABLE users (
 	id INT AUTO_INCREMENT NOT NULL,

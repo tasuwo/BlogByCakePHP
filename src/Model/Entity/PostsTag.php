@@ -6,6 +6,7 @@ use Cake\ORM\Entity;
 /**
  * PostsTag Entity.
  *
+ * @property int $id
  * @property int $post_id
  * @property \App\Model\Entity\Post $post
  * @property int $tag_id
