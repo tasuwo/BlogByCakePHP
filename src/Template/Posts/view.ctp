@@ -57,7 +57,7 @@
 
 
             <?php if (!empty($post->comments)): ?>
-                <table>
+                <table class="col-sm-7">
                     <?php foreach ($post->comments as $comments): ?>
                         <tr>
                             <td class="col-sm-5">
@@ -76,6 +76,28 @@
                                     </div>
                                 </div>
                             </td>
+                            <?php if ($this->request->session()->read(
+                                'Auth.User'
+                            )
+                            ): ?>
+                                <td class="col-sm-2">
+                                    <?= $this->Form->postLink(
+                                        __('Delete'),
+                                        [
+                                            'action' => 'delete_comment',
+                                            $comments->id,
+                                            $post->id
+                                        ],
+                                        [
+                                            'confirm' => __(
+                                                'Are you sure you want to delete # {0}?',
+                                                $comments->id
+                                            ),
+                                            'class' => "btn btn-default btn-danger"
+                                        ]
+                                    ) ?>
+                                </td>
+                            <?php endif; ?>
                         </tr>
                     <?php endforeach; ?>
                 </table>

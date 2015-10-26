@@ -16,7 +16,7 @@ class PostsController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow(
-            ['index', 'view', 'postComment']
+            ['index', 'view', 'postComment', 'deleteComment']
         );
     }
 
@@ -74,6 +74,23 @@ class PostsController extends AppController
                 ]
             );
         }
+    }
+
+    public function deleteComment($comment_id = null, $post_id = null)
+    {
+        $commentTable = TableRegistry::get('Comments');
+        $comment = $commentTable->get($comment_id);
+        if ($commentTable->delete($comment)) {
+            $this->Flash->success(__('The comment has been deleted.'));
+        } else {
+            $this->Flash->error(__('The comment could not be deleted. Please, try again.'));
+        }
+        return $this->redirect(
+            [
+                'action' => 'view',
+                $post_id
+            ]
+        );
     }
 
     /**
