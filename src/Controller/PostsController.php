@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
 
 /**
  * Posts Controller
@@ -15,7 +16,7 @@ class PostsController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow(
-            ['index', 'view']
+            ['index', 'view', 'postComment']
         );
     }
 
@@ -39,11 +40,40 @@ class PostsController extends AppController
      */
     public function view($id = null)
     {
+        $commentTable = TableRegistry::get('Comments');
+        $comment = $commentTable->newEntity();
         $post = $this->Posts->get($id, [
             'contain' => ['Tags', 'Comments']
         ]);
-        $this->set('post', $post);
+        $this->set('comment', $comment);
+        $this->set(compact('post'));
         $this->set('_serialize', ['post']);
+    }
+
+    public function postComment()
+    {
+        if ($this->request->is('post')) {
+            $now = new \DateTime();
+
+            $commentTable = TableRegistry::get('Comments');
+            $comment = $commentTable->newEntity();
+            $comment = $commentTable->patchEntity($comment, $this->request->data);
+            $comment->updated_at = $now->format('Y-m-d H:i:s');
+            $comment->created_at = $now->format('Y-m-d H:i:s');
+
+            if ($commentTable->save($comment)) {
+                $this->Flash->success(__('The comment has been saved.'));
+            } else {
+                $this->Flash->error(__('The comment could not be saved. Please, try again.'));
+            }
+            return $this->redirect(
+                [
+                    'controller' => 'posts',
+                    'action' => 'view',
+                    $this->request->data('post_id')
+                ]
+            );
+        }
     }
 
     /**

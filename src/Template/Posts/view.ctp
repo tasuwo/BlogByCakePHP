@@ -15,6 +15,8 @@
 
 <div class="container-fluid">
     <div class="row">
+
+
         <div class="col-sm-3 col-md-2 sidebar">
             <ul class="nav nav-sidebar">
                 <li class="active">
@@ -23,7 +25,11 @@
                 <li><a href="#">Non-Active</a></li>
             </ul>
         </div>
+
+
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+
+
             <div class="well">
                 <h3><a href=""><?= h($post->title) ?></a></h3>
                 <hr>
@@ -49,6 +55,7 @@
                 <p class="lead"><?= h($post->body) ?></p>
             </div>
 
+
             <?php if (!empty($post->comments)): ?>
                 <table>
                     <?php foreach ($post->comments as $comments): ?>
@@ -67,20 +74,85 @@
                                     <div class="panel-body">
                                         <?= h($comments->body) ?>
                                     </div>
-                                    <!-- /panel-body -->
                                 </div>
-                                <!-- /panel panel-default -->
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </table>
             <?php endif; ?>
+
+
+            <div class="col-md-8">
+                <div class="well well-sm">
+                    <?= $this->Form->create(
+                        $comment, ['action' => 'post_comment']
+                    ) ?>
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label"
+                                   for="name">Name</label>
+
+                            <div class="col-md-9">
+                                <?=
+                                $this->Form->input(
+                                    'user_name',
+                                    [
+                                        'label' => false,
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Your name'
+                                    ]
+                                )
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="message">
+                                Your message
+                            </label>
+
+                            <div class="col-md-9">
+                                <?=
+                                $this->Form->input(
+                                    'body',
+                                    [
+                                        'label' => false,
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Please enter your message here...',
+                                        'rows' => 5
+                                    ]
+                                )
+                                ?>
+                            </div>
+                        </div>
+                        <?= $this->Form->hidden(
+                            'post_id', ['value' => $post->id]
+                        ); ?>
+
+                        <div class="form-group">
+                            <div class="col-md-12 text-right">
+                                <?=
+                                $this->Form->button(
+                                    __('Submit'),
+                                    [
+                                        'class' => 'btn btn-primary btn-lg'
+                                    ]
+                                )
+                                ?>
+                            </div>
+                        </div>
+
+                        <?= $this->Form->end() ?>
+                    </fieldset>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script
-    src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
+</script>
 <?= $this->Html->script('bootstrap.js') ?>
 </body>
 </html>
