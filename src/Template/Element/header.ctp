@@ -28,7 +28,7 @@
                         'Blog',
                         array(
                             'controller' => 'Posts',
-                            'action' => 'battle',
+                            'action' => 'index',
                         )
                     );
                     ?>
