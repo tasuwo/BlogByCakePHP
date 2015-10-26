@@ -16,7 +16,12 @@ class PostsController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow(
-            ['index', 'view', 'postComment', 'deleteComment']
+            [
+                'index',
+                'view',
+                'postComment',
+                'deleteComment'
+            ]
         );
     }
 
@@ -115,10 +120,19 @@ class PostsController extends AppController
     {
         $post = $this->Posts->newEntity();
         if ($this->request->is('post')) {
+            $now = new \DateTime();
+
             $post = $this->Posts->patchEntity($post, $this->request->data);
+            $post->updated_at = $now->format('Y-m-d H:i:s');
+            $post->created_at = $now->format('Y-m-d H:i:s');
+
             if ($this->Posts->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(
+                    [
+                        'action' => 'index'
+                    ]
+                );
             } else {
                 $this->Flash->error(__('The post could not be saved. Please, try again.'));
             }

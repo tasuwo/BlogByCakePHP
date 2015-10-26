@@ -59,6 +59,17 @@
                     <li>
                         <?=
                         $this->Html->link(
+                            'Post',
+                            array(
+                                'controller' => 'Posts',
+                                'action' => 'add'
+                            )
+                        );
+                        ?>
+                    </li>
+                    <li>
+                        <?=
+                        $this->Html->link(
                             'Sign out',
                             array(
                                 'controller' => 'Users',
