@@ -50,8 +50,8 @@ class PostsController extends AppController
         $comment = $commentTable->newEntity();
         $post = $this->Posts->get(
             $id, [
-            'contain' => ['Tags', 'Comments']
-        ]
+                'contain' => ['Tags', 'Comments']
+            ]
         );
         $this->set('comment', $comment);
         $this->set(compact('post'));
@@ -164,13 +164,22 @@ class PostsController extends AppController
      */
     public function edit($id = null)
     {
+        $tagsTable = TableRegistry::get('Tags');
+        $tags = $tagsTable->find();
+
+        $now = new \DateTime();
+
         $post = $this->Posts->get(
-            $id, [
-            'contain' => ['Tags']
-        ]
+            $id,
+            [
+                'contain' => ['Tags']
+            ]
         );
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->Posts->patchEntity($post, $this->request->data);
+            $post->updated_at = $now->format('Y-m-d H:i:s');
+
             if ($this->Posts->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -180,7 +189,7 @@ class PostsController extends AppController
                 );
             }
         }
-        $tags = $this->Posts->Tags->find('list', ['limit' => 200]);
+
         $this->set(compact('post', 'tags'));
         $this->set('_serialize', ['post']);
     }
