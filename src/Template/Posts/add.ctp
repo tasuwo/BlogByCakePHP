@@ -21,14 +21,21 @@
 <body class="home">
 
 <script>
+    function sendPost(action, send_data, args) {
+        return $.ajax({
+            type: "POST",
+            url: action,
+            data: send_data,
+            context: args
+        })
+    }
+
     function addTagDialog() {
         var tagDialog = $("<div></div>").dialog({autoOpen: false});
-
         tagDialog.html(
             "Please input new tag's name on following space."
             + '<br><br><input type="text" name="new_tag_name" id="new_tag_name"/>'
         );
-
         tagDialog.dialog("option", {
             title: "Add new tag",
             width: 400,
@@ -37,18 +44,33 @@
                 "Add": function () {
                     $(this).dialog("close");
 
-                    var new_tags_name =  $("#new_tag_name").val();
-                    var new_tags_id = 3;
+                    var new_tags_name = $("#new_tag_name").val();
 
-                    $("#tags-panel").append(
-                        '<div class="col-md-3">' +
-                        '<div class="funkyradio funkyradio-primary">' +
-                        '<input type="checkbox" name="tags[_ids][]" value="1" id="checkbox' + new_tags_id+ '">' +
-                        '<label for="checkbox' + new_tags_id + '">' +
-                        new_tags_name +
-                        '</label>' +
-                        '</div>' +
-                        '</div>'
+                    sendPost("ajaxAddNewTag",
+                        {
+                            tags_name: new_tags_name
+                        },
+                        {
+                            tags_name: new_tags_name
+                        }
+                    ).done(
+                        function (new_tags_id) {
+                            if (new_tags_id === '-1') {
+                                alert('Failed to save tag');
+                                return;
+                            }
+
+                            $("#tags-panel").append(
+                                '<div class="col-md-3">' +
+                                '<div class="funkyradio funkyradio-primary">' +
+                                '<input type="checkbox" name="tags[_ids][]" value="' + new_tags_id + '" id="checkbox' + new_tags_id + '">' +
+                                '<label for="checkbox' + new_tags_id + '">' +
+                                new_tags_name +
+                                '</label>' +
+                                '</div>' +
+                                '</div>'
+                            );
+                        }
                     );
                 },
                 "Cancel": function () {
@@ -56,7 +78,6 @@
                 }
             }
         });
-
         tagDialog.dialog("open");
     }
 </script>
