@@ -18,19 +18,19 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-8 col-xs-offset-2">
+            <br>
             <?= $this->Form->create($post) ?>
             <fieldset>
                 <legend><?= __('Add Post') ?></legend>
-                <?php
-                echo $this->Form->input('title');
-                echo $this->Form->input('body');
-                ?>
 
-                <div class="col-md-4">
-                    <div class="col-md-6">
-                        <div class="funkyradio">
-                            <?php foreach ($tags as $tag): ?>
-                                <div class="funkyradio-primary">
+                <?= $this->Form->input('title') ?>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Tags</div>
+                    <div class="panel-body">
+                        <?php foreach ($tags as $tag): ?>
+                            <div class="col-md-3">
+                                <div class="funkyradio funkyradio-primary">
                                     <?= $this->Form->checkbox(
                                         'tags[_ids][]',
                                         [
@@ -42,12 +42,20 @@
                                         <?= $tag->name ?>
                                     </label>
                                 </div>
-                                <?php endforeach; ?>
-                        </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
+
+                <?= $this->Form->input('body') ?>
+
             </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
+            <?= $this->Form->button(
+                __('Submit'),
+                [
+                    'class' => 'btn btn-primary'
+                ]
+            ) ?>
             <?= $this->Form->end() ?>
         </div>
     </div>
