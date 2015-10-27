@@ -7,11 +7,59 @@
     <?= $this->Html->css('dashboard.css') ?>
     <?= $this->Html->css('checkbox.css') ?>
 
+    <link type="text/css" rel="stylesheet"
+          href="http://code.jquery.com/ui/1.10.3/themes/cupertino/jquery-ui.min.css"/>
+    <script
+        src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script
+        src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+
     <link
         href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"
         rel="stylesheet">
 </head>
 <body class="home">
+
+<script>
+    function addTagDialog() {
+        var tagDialog = $("<div></div>").dialog({autoOpen: false});
+
+        tagDialog.html(
+            "Please input new tag's name on following space."
+            + '<br><br><input type="text" name="new_tag_name" id="new_tag_name"/>'
+        );
+
+        tagDialog.dialog("option", {
+            title: "Add new tag",
+            width: 400,
+            height: 200,
+            buttons: {
+                "Add": function () {
+                    $(this).dialog("close");
+
+                    var new_tags_name =  $("#new_tag_name").val();
+                    var new_tags_id = 3;
+
+                    $("#tags-panel").append(
+                        '<div class="col-md-3">' +
+                        '<div class="funkyradio funkyradio-primary">' +
+                        '<input type="checkbox" name="tags[_ids][]" value="1" id="checkbox' + new_tags_id+ '">' +
+                        '<label for="checkbox' + new_tags_id + '">' +
+                        new_tags_name +
+                        '</label>' +
+                        '</div>' +
+                        '</div>'
+                    );
+                },
+                "Cancel": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        tagDialog.dialog("open");
+    }
+</script>
 
 <?= $this->element('header') ?>
 
@@ -27,7 +75,7 @@
 
                 <div class="panel panel-default">
                     <div class="panel-heading">Tags</div>
-                    <div class="panel-body">
+                    <div class="panel-body" id="tags-panel">
                         <?php foreach ($tags as $tag): ?>
                             <div class="col-md-3">
                                 <div class="funkyradio funkyradio-primary">
@@ -47,6 +95,17 @@
                     </div>
                 </div>
 
+                <?= $this->Form->button(
+                    'New Tag',
+                    [
+                        'type' => 'button',
+                        'class' => 'btn btn-primary',
+                        'onclick' => 'addTagDialog()'
+                    ]
+                ) ?>
+
+                <br><br>
+
                 <?= $this->Form->input('body') ?>
 
             </fieldset>
@@ -61,9 +120,6 @@
     </div>
 </div>
 
-<script
-    src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js">
-</script>
 <?= $this->Html->script('bootstrap.js') ?>
 </body>
 </html>
