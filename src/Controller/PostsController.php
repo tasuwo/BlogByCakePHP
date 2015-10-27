@@ -16,7 +16,12 @@ class PostsController extends AppController
     {
         parent::beforeFilter($event);
         $this->Auth->allow(
-            ['index', 'view', 'postComment', 'deleteComment']
+            [
+                'index',
+                'view',
+                'postComment',
+                'deleteComment'
+            ]
         );
     }
 
@@ -27,7 +32,9 @@ class PostsController extends AppController
      */
     public function index()
     {
-        $this->set('posts', $this->paginate($this->Posts));
+        $posts = $this->Posts->find('all')->contain(['Tags']);
+        // TODO: paginate
+        $this->set('posts', $this->paginate($posts));
         $this->set('_serialize', ['posts']);
     }
 
@@ -35,6 +42,7 @@ class PostsController extends AppController
      * View method
      *
      * @param string|null $id Post id.
+     *
      * @return void
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -42,14 +50,21 @@ class PostsController extends AppController
     {
         $commentTable = TableRegistry::get('Comments');
         $comment = $commentTable->newEntity();
-        $post = $this->Posts->get($id, [
-            'contain' => ['Tags', 'Comments']
-        ]);
+        $post = $this->Posts->get(
+            $id, [
+                'contain' => ['Tags', 'Comments']
+            ]
+        );
         $this->set('comment', $comment);
         $this->set(compact('post'));
         $this->set('_serialize', ['post']);
     }
 
+    /**
+     * Post comment method
+     *
+     * @return \Cake\Network\Response|void
+     */
     public function postComment()
     {
         if ($this->request->is('post')) {
@@ -57,14 +72,18 @@ class PostsController extends AppController
 
             $commentTable = TableRegistry::get('Comments');
             $comment = $commentTable->newEntity();
-            $comment = $commentTable->patchEntity($comment, $this->request->data);
+            $comment = $commentTable->patchEntity(
+                $comment, $this->request->data
+            );
             $comment->updated_at = $now->format('Y-m-d H:i:s');
             $comment->created_at = $now->format('Y-m-d H:i:s');
 
             if ($commentTable->save($comment)) {
                 $this->Flash->success(__('The comment has been saved.'));
             } else {
-                $this->Flash->error(__('The comment could not be saved. Please, try again.'));
+                $this->Flash->error(
+                    __('The comment could not be saved. Please, try again.')
+                );
             }
             return $this->redirect(
                 [
@@ -76,6 +95,14 @@ class PostsController extends AppController
         }
     }
 
+    /**
+     * Delete Comment method
+     *
+     * @param null $comment_id
+     * @param null $post_id
+     *
+     * @return \Cake\Network\Response|void
+     */
     public function deleteComment($comment_id = null, $post_id = null)
     {
         $commentTable = TableRegistry::get('Comments');
@@ -83,7 +110,9 @@ class PostsController extends AppController
         if ($commentTable->delete($comment)) {
             $this->Flash->success(__('The comment has been deleted.'));
         } else {
-            $this->Flash->error(__('The comment could not be deleted. Please, try again.'));
+            $this->Flash->error(
+                __('The comment could not be deleted. Please, try again.')
+            );
         }
         return $this->redirect(
             [
@@ -94,24 +123,35 @@ class PostsController extends AppController
     }
 
     /**
-     * Add method
-     *
-     * @return void Redirects on successful add, renders view otherwise.
+     * @throws \Exception
      */
     public function add()
     {
+        $tagsTable = TableRegistry::get('Tags');
+        $postsTagsTable = TableRegistry::get('PostsTags');
+
+        $now = new \DateTime();
+
+        $tags = $tagsTable->find();
         $post = $this->Posts->newEntity();
+
         if ($this->request->is('post')) {
             $post = $this->Posts->patchEntity($post, $this->request->data);
-            if ($this->Posts->save($post)) {
-                $this->Flash->success(__('The post has been saved.'));
-                return $this->redirect(['action' => 'index']);
+            $post->updated_at = $now->format('Y-m-d H:i:s');
+            $post->created_at = $now->format('Y-m-d H:i:s');
+
+            if (!$this->Posts->save($post)) {
+                throw new \Exception('Failed to save post entity');
             } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'));
+                return $this->redirect(
+                    [
+                        'action' => 'view',
+                        $post->id
+                    ]
+                );
             }
         }
 
-        $tags = $this->Posts->Tags->find('list', ['limit' => 200]);
         $this->set(compact('post', 'tags'));
         $this->set('_serialize', ['post']);
     }
@@ -120,24 +160,38 @@ class PostsController extends AppController
      * Edit method
      *
      * @param string|null $id Post id.
+     *
      * @return void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
     {
-        $post = $this->Posts->get($id, [
-            'contain' => ['Tags']
-        ]);
+        $tagsTable = TableRegistry::get('Tags');
+        $tags = $tagsTable->find();
+
+        $now = new \DateTime();
+
+        $post = $this->Posts->get(
+            $id,
+            [
+                'contain' => ['Tags']
+            ]
+        );
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $post = $this->Posts->patchEntity($post, $this->request->data);
+            $post->updated_at = $now->format('Y-m-d H:i:s');
+
             if ($this->Posts->save($post)) {
                 $this->Flash->success(__('The post has been saved.'));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The post could not be saved. Please, try again.'));
+                $this->Flash->error(
+                    __('The post could not be saved. Please, try again.')
+                );
             }
         }
-        $tags = $this->Posts->Tags->find('list', ['limit' => 200]);
+
         $this->set(compact('post', 'tags'));
         $this->set('_serialize', ['post']);
     }
@@ -146,6 +200,7 @@ class PostsController extends AppController
      * Delete method
      *
      * @param string|null $id Post id.
+     *
      * @return void Redirects to index.
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
@@ -156,8 +211,39 @@ class PostsController extends AppController
         if ($this->Posts->delete($post)) {
             $this->Flash->success(__('The post has been deleted.'));
         } else {
-            $this->Flash->error(__('The post could not be deleted. Please, try again.'));
+            $this->Flash->error(
+                __('The post could not be deleted. Please, try again.')
+            );
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * ajax用の関数のために echo しているので，他では使わないこと
+     */
+    public function ajaxAddNewTag()
+    {
+        if ($this->request->is('post')) {
+            $new_tags_name = $this->request->data('tags_name');
+
+            $tagsTable = TableRegistry::get('Tags');
+            $new_tag = $tagsTable->newEntity(
+                [
+                    'name' => $new_tags_name
+                ]
+            );
+            if (!$tagsTable->save($new_tag)) {
+                echo '-1';
+                exit;
+            } else {
+                $added_tag = $tagsTable->find()->where(
+                    [
+                        'name' => $new_tags_name
+                    ]
+                )->first();
+                echo $added_tag->id;
+                exit;
+            }
+        }
     }
 }

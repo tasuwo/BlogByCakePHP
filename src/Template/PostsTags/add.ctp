@@ -13,6 +13,7 @@
     <fieldset>
         <legend><?= __('Add Posts Tag') ?></legend>
         <?php
+            echo $this->Form->input('id');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

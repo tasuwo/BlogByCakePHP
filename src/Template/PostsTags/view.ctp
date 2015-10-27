@@ -22,5 +22,9 @@
             <th><?= __('Tag') ?></th>
             <td><?= $postsTag->has('tag') ? $this->Html->link($postsTag->tag->name, ['controller' => 'Tags', 'action' => 'view', $postsTag->tag->id]) : '' ?></td>
         </tr>
+        <tr>
+            <th><?= __('Id') ?></th>
+            <td><?= $this->Number->format($postsTag->id) ?></td>
+        </tr>
     </table>
 </div>
