@@ -35,26 +35,16 @@
                             </p>
 
                             <p><i class="fa fa-tags"></i>
-                                Tags: <a href="">
-                                    <span class="badge badge-info">
-                                        Bootstrap
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <span class="badge badge-info">
-                                        Web
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <span class="badge badge-info">
-                                        CSS
-                                    </span>
-                                </a>
-                                <a href="">
-                                    <span class="badge badge-info">
-                                        HTML
-                                    </span>
-                                </a>
+                                Tags:
+                                <?php if (!empty($post->tags)): ?>
+                                    <?php foreach ($post->tags as $tags): ?>
+                                        <a href="">
+                                            <span class="badge badge-info">
+                                                <?= h($tags->name) ?>
+                                            </span>
+                                        </a>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </p>
                             <hr>
                             <p class="lead"><?= h($post->body) ?></p>
@@ -102,6 +92,7 @@
                     </tr>
                 <?php endforeach; ?>
             </table>
+            <!--
             <div class="paginator">
                 <ul class="pagination">
                     <?= $this->Paginator->prev('< ' . __('previous')) ?>
@@ -110,6 +101,7 @@
                 </ul>
                 <p><?= $this->Paginator->counter() ?></p>
             </div>
+            -->
         </div>
     </div>
 </div>

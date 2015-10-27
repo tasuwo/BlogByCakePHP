@@ -32,7 +32,9 @@ class PostsController extends AppController
      */
     public function index()
     {
-        $this->set('posts', $this->paginate($this->Posts));
+        $posts = $this->Posts->find('all')->contain(['Tags']);
+        // TODO: paginate
+        $this->set('posts', $this->paginate($posts));
         $this->set('_serialize', ['posts']);
     }
 

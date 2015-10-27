@@ -40,16 +40,14 @@
                 <p><i class="fa fa-tags"></i>
                     Tags:
                     <?php if (!empty($post->tags)): ?>
-                <table cellpadding="0" cellspacing="0">
-                    <?php foreach ($post->tags as $tags): ?>
-                        <a href="">
-                        <span class="badge badge-info">
-                            <?= h($tags->name) ?>
-                        </span>
-                        </a>
-                    <?php endforeach; ?>
-                </table>
-                <?php endif; ?>
+                        <?php foreach ($post->tags as $tags): ?>
+                            <a href="">
+                                <span class="badge badge-info">
+                                    <?= h($tags->name) ?>
+                                </span>
+                            </a>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </p>
                 <hr>
                 <p class="lead"><?= h($post->body) ?></p>
