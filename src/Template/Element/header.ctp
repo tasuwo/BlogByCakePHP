@@ -11,7 +11,7 @@
             </button>
             <?=
             $this->Html->link(
-                'Blog',
+                'Blog Title',
                 array(
                     'controller' => 'posts',
                     'action' => 'index'
@@ -29,28 +29,6 @@
                         array(
                             'controller' => 'Posts',
                             'action' => 'index',
-                        )
-                    );
-                    ?>
-                </li>
-                <li>
-                    <?=
-                    $this->Html->link(
-                        'Archive',
-                        array(
-                            'controller' => 'Coordinates',
-                            'action' => 'create',
-                        )
-                    );
-                    ?>
-                </li>
-                <li>
-                    <?=
-                    $this->Html->link(
-                        'About',
-                        array(
-                            'controller' => 'Coordinates',
-                            'action' => 'create',
                         )
                     );
                     ?>
@@ -102,7 +80,7 @@
                 ]
             );
             echo $this->Form->input(
-                'criteria',
+                '',
                 [
                     'type' => 'text',
                     'placeholder' => 'Search...'
