@@ -25,6 +25,13 @@
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <table cellpadding="0" cellspacing="0">
+
+                <?php
+                if (isset($search_tag)) {
+                    echo '<h2>Category : ' . $search_tag . '<h2>';
+                }
+                ?>
+
                 <?php foreach ($posts as $post): ?>
                     <tr>
                         <div class="well">
@@ -36,15 +43,24 @@
 
                             <p><i class="fa fa-tags"></i>
                                 Tags:
-                                <?php if (!empty($post->tags)): ?>
-                                    <?php foreach ($post->tags as $tags): ?>
-                                        <a href="">
-                                            <span class="badge badge-info">
-                                                <?= h($tags->name) ?>
-                                            </span>
-                                        </a>
-                                    <?php endforeach; ?>
-                                <?php endif; ?>
+                                <?php
+                                if (!empty($post->tags)) {
+                                    foreach ($post->tags as $tags) {
+                                        echo $this->Html->link(
+                                            $this->Html->tag(
+                                                'span',
+                                                $tags->name,
+                                                ['class' => "badge badge-info"]
+                                            ),
+                                            [
+                                                'action' => 'index',
+                                                '?' => ['tag' => $tags->name]
+                                            ],
+                                            ['escape' => false]
+                                        );
+                                    }
+                                }
+                                ?>
                             </p>
                             <hr>
                             <p class="lead"><?= h($post->body) ?></p>
