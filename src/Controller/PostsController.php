@@ -65,6 +65,7 @@ class PostsController extends AppController
                             return $q->where(['Tags.name' => $criteria]);
                         }
                     );
+                    $this->set('search_tag', $criteria);
                 }
             }
             $posts = $query->all();
