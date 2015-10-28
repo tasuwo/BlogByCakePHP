@@ -78,7 +78,7 @@
                         );
                         ?>
                     </li>
-                    <?php else: ?>
+                <?php else: ?>
                     <li>
                         <?=
                         $this->Html->link(
@@ -92,9 +92,24 @@
                     </li>
                 <?php endif; ?>
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
+            <?php
+            echo $this->Form->create(
+                null,
+                [
+                    'url' => ['controller' => 'Posts', 'action' => 'index'],
+                    'type' => 'get',
+                    'class' => 'navbar-form navbar-right'
+                ]
+            );
+            echo $this->Form->input(
+                'criteria',
+                [
+                    'type' => 'text',
+                    'placeholder' => 'Search...'
+                ]
+            );
+            echo $this->Form->end();
+            ?>
         </div>
     </div>
 </nav>

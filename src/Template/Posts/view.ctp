@@ -39,15 +39,24 @@
 
                 <p><i class="fa fa-tags"></i>
                     Tags:
-                    <?php if (!empty($post->tags)): ?>
-                        <?php foreach ($post->tags as $tags): ?>
-                            <a href="">
-                                <span class="badge badge-info">
-                                    <?= h($tags->name) ?>
-                                </span>
-                            </a>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                    <?php
+                    if (!empty($post->tags)) {
+                        foreach ($post->tags as $tags) {
+                            echo $this->Html->link(
+                                $this->Html->tag(
+                                    'span',
+                                    $tags->name,
+                                    ['class' => "badge badge-info"]
+                                ),
+                                [
+                                    'action' => 'index',
+                                    '?' => ['tag' => $tags->name]
+                                ],
+                                ['escape' => false]
+                            );
+                        }
+                    }
+                    ?>
                 </p>
                 <hr>
                 <p class="lead"><?= h($post->body) ?></p>

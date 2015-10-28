@@ -33,8 +33,45 @@ class PostsController extends AppController
     public function index()
     {
         $posts = $this->Posts->find('all')->contain(['Tags']);
+
+        // TODO: OR検索とAND検索等，細かい検索を行えるようにする
+        // TODO: 検索の処理は切り出したほうがよさげ
+        if ($this->request->is('get')) {
+            $query = $this->Posts->find()->contain(['Tags']);
+
+            if (array_key_exists('criteria', $this->request->query)) {
+                $criteria = $this->request->query('criteria');
+                $criteria_array = explode(" ", $criteria);
+
+                foreach ($criteria_array as $criteria) {
+                    $query->orWhere(
+                        [
+                            'Posts.title LIKE' => '%' . $criteria . '%',
+                        ]
+                    );
+                    // TODO: 全文検索の効率が悪そう
+                    $query->orWhere(
+                        [
+                            'Posts.body LIKE' => '%' . $criteria . '%',
+                        ]
+                    );
+                }
+            } else {
+                if (array_key_exists('tag', $this->request->query)) {
+                    $criteria = $this->request->query('tag');
+                    $query->matching(
+                        'Tags',
+                        function (\Cake\ORM\Query $q) use (&$criteria) {
+                            return $q->where(['Tags.name' => $criteria]);
+                        }
+                    );
+                }
+            }
+            $posts = $query->all();
+        }
+
         // TODO: paginate
-        $this->set('posts', $this->paginate($posts));
+        $this->set('posts', $posts);
         $this->set('_serialize', ['posts']);
     }
 
