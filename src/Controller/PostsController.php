@@ -12,6 +12,22 @@ use Cake\ORM\TableRegistry;
  */
 class PostsController extends AppController
 {
+    public $paginate = [
+        'limit' => 5,
+        'order' => [
+            'Posts.created_at' => 'desc'
+        ]
+    ];
+    public $helpers = [
+        'Paginator' => ['templates' => 'paginator-templates']
+    ];
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+    }
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -32,9 +48,43 @@ class PostsController extends AppController
      */
     public function index()
     {
-        $posts = $this->Posts->find('all')->contain(['Tags']);
-        // TODO: paginate
-        $this->set('posts', $this->paginate($posts));
+        $query = $this->Posts->find()->contain(['Tags']);
+
+        // TODO: OR検索とAND検索等，細かい検索を行えるようにする
+        // TODO: 検索の処理は切り出したほうがよさげ
+        if ($this->request->is('get')) {
+            if (array_key_exists('criteria', $this->request->query)) {
+                $criteria = $this->request->query('criteria');
+                $criteria_array = explode(" ", $criteria);
+
+                foreach ($criteria_array as $criteria) {
+                    $query->orWhere(
+                        [
+                            'Posts.title LIKE' => '%' . $criteria . '%',
+                        ]
+                    );
+                    // TODO: 全文検索の効率が悪そう
+                    $query->orWhere(
+                        [
+                            'Posts.body LIKE' => '%' . $criteria . '%',
+                        ]
+                    );
+                }
+            } else {
+                if (array_key_exists('tag', $this->request->query)) {
+                    $criteria = $this->request->query('tag');
+                    $query->matching(
+                        'Tags',
+                        function (\Cake\ORM\Query $q) use (&$criteria) {
+                            return $q->where(['Tags.name' => $criteria]);
+                        }
+                    );
+                    $this->set('search_tag', $criteria);
+                }
+            }
+        }
+
+        $this->set('posts', $this->paginate($query));
         $this->set('_serialize', ['posts']);
     }
 
