@@ -108,16 +108,13 @@
                     </tr>
                 <?php endforeach; ?>
             </table>
-            <!--
-            <div class="paginator">
+            <div class="text-center">
                 <ul class="pagination">
-                    <?= $this->Paginator->prev('< ' . __('previous')) ?>
+                    <?= $this->Paginator->prev('«') ?>
                     <?= $this->Paginator->numbers() ?>
-                    <?= $this->Paginator->next(__('next') . ' >') ?>
+                    <?= $this->Paginator->next('»') ?>
                 </ul>
-                <p><?= $this->Paginator->counter() ?></p>
             </div>
-            -->
         </div>
     </div>
 </div>

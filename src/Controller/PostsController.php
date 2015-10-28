@@ -12,6 +12,22 @@ use Cake\ORM\TableRegistry;
  */
 class PostsController extends AppController
 {
+    public $paginate = [
+        'limit' => 5,
+        'order' => [
+            'Posts.created_at' => 'desc'
+        ]
+    ];
+    public $helpers = [
+        'Paginator' => ['templates' => 'paginator-templates']
+    ];
+
+    public function initialize()
+    {
+        parent::initialize();
+        $this->loadComponent('Paginator');
+    }
+
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
@@ -32,13 +48,11 @@ class PostsController extends AppController
      */
     public function index()
     {
-        $posts = $this->Posts->find('all')->contain(['Tags']);
+        $query = $this->Posts->find()->contain(['Tags']);
 
         // TODO: OR検索とAND検索等，細かい検索を行えるようにする
         // TODO: 検索の処理は切り出したほうがよさげ
         if ($this->request->is('get')) {
-            $query = $this->Posts->find()->contain(['Tags']);
-
             if (array_key_exists('criteria', $this->request->query)) {
                 $criteria = $this->request->query('criteria');
                 $criteria_array = explode(" ", $criteria);
@@ -68,11 +82,9 @@ class PostsController extends AppController
                     $this->set('search_tag', $criteria);
                 }
             }
-            $posts = $query->all();
         }
 
-        // TODO: paginate
-        $this->set('posts', $posts);
+        $this->set('posts', $this->paginate($query));
         $this->set('_serialize', ['posts']);
     }
 
