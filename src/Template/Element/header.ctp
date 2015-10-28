@@ -11,7 +11,7 @@
             </button>
             <?=
             $this->Html->link(
-                'Blog',
+                'Blog Title',
                 array(
                     'controller' => 'posts',
                     'action' => 'index'
@@ -29,28 +29,6 @@
                         array(
                             'controller' => 'Posts',
                             'action' => 'index',
-                        )
-                    );
-                    ?>
-                </li>
-                <li>
-                    <?=
-                    $this->Html->link(
-                        'Archive',
-                        array(
-                            'controller' => 'Coordinates',
-                            'action' => 'create',
-                        )
-                    );
-                    ?>
-                </li>
-                <li>
-                    <?=
-                    $this->Html->link(
-                        'About',
-                        array(
-                            'controller' => 'Coordinates',
-                            'action' => 'create',
                         )
                     );
                     ?>
@@ -78,7 +56,7 @@
                         );
                         ?>
                     </li>
-                    <?php else: ?>
+                <?php else: ?>
                     <li>
                         <?=
                         $this->Html->link(
@@ -92,9 +70,24 @@
                     </li>
                 <?php endif; ?>
             </ul>
-            <form class="navbar-form navbar-right">
-                <input type="text" class="form-control" placeholder="Search...">
-            </form>
+            <?php
+            echo $this->Form->create(
+                null,
+                [
+                    'url' => ['controller' => 'Posts', 'action' => 'index'],
+                    'type' => 'get',
+                    'class' => 'navbar-form navbar-right'
+                ]
+            );
+            echo $this->Form->input(
+                '',
+                [
+                    'type' => 'text',
+                    'placeholder' => 'Search...'
+                ]
+            );
+            echo $this->Form->end();
+            ?>
         </div>
     </div>
 </nav>
