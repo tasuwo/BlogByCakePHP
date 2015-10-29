@@ -58,6 +58,21 @@
                     }
                     ?>
                 </p>
+
+                <p>
+                    TrackBack:
+                    <?php
+                    echo $this->Url->build(
+                        [
+                            'controller' => 'track-back',
+                            'action' => '',
+                            $post->id
+                        ],
+                        true
+                    )
+                    ?>
+                </p>
+
                 <hr>
                 <p class="lead"><?= h($post->body) ?></p>
             </div>
