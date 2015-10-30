@@ -129,6 +129,8 @@
 
                 <?= $this->Form->input('body') ?>
 
+                <?= $this->Form->input('track_back') ?>
+
             </fieldset>
             <?= $this->Form->button(
                 __('Submit'),

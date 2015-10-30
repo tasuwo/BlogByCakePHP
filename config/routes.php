@@ -51,15 +51,11 @@ Router::scope(
      */
     $routes->connect('/', ['controller' => 'Posts', 'action' => 'index']);
     $routes->connect(
-        '/track-back/:id',
+        '/track-back/*',
         [
             'controller' => 'TrackBack',
             'action' => 'receiveTrackBackPing',
             'ext' => 'xml'
-        ],
-        [
-        'id' => '\d+',
-            'pass' => ['id']
         ]
     );
 
