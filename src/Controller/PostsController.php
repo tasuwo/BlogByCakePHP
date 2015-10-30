@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Network\Http\Client;
 
 /**
  * Posts Controller
@@ -12,15 +13,17 @@ use Cake\ORM\TableRegistry;
  */
 class PostsController extends AppController
 {
-    public $paginate = [
-        'limit' => 5,
-        'order' => [
-            'Posts.created_at' => 'desc'
-        ]
-    ];
-    public $helpers = [
-        'Paginator' => ['templates' => 'paginator-templates']
-    ];
+    public $paginate
+        = [
+            'limit' => 5,
+            'order' => [
+                'Posts.created_at' => 'desc'
+            ]
+        ];
+    public $helpers
+        = [
+            'Paginator' => ['templates' => 'paginator-templates']
+        ];
 
     public function initialize()
     {
@@ -178,7 +181,6 @@ class PostsController extends AppController
     public function add()
     {
         $tagsTable = TableRegistry::get('Tags');
-        $postsTagsTable = TableRegistry::get('PostsTags');
 
         $now = new \DateTime();
 
@@ -189,6 +191,22 @@ class PostsController extends AppController
             $post = $this->Posts->patchEntity($post, $this->request->data);
             $post->updated_at = $now->format('Y-m-d H:i:s');
             $post->created_at = $now->format('Y-m-d H:i:s');
+
+            if ($this->request->data('track_back')) {
+                // TODO: レスポンスに対してどう処理を行うか
+                $xml = $this->sendRequest(
+                // TODO: ブログタイトルとかどうしようかとか
+                    $this->request->data('track_back'),
+                    [
+                        "title" => $post->title,
+                        "excerpt" => "",
+                        "url" => "",
+                        "blog_name" => "title"
+                    ]
+                );
+                echo $xml;
+                exit;
+            }
 
             if (!$this->Posts->save($post)) {
                 throw new \Exception('Failed to save post entity');
@@ -204,6 +222,13 @@ class PostsController extends AppController
 
         $this->set(compact('post', 'tags'));
         $this->set('_serialize', ['post']);
+    }
+
+    private function sendRequest($track_back_url, $data)
+    {
+        $http = new Client();
+        $result = $http->post($track_back_url, $data);
+        return $result;
     }
 
     /**

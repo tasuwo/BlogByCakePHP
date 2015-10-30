@@ -48,6 +48,17 @@
                     <li>
                         <?=
                         $this->Html->link(
+                            'TrackBack',
+                            array(
+                                'controller' => 'TrackBack',
+                                'action' => 'index'
+                            )
+                        );
+                        ?>
+                    </li>
+                    <li>
+                        <?=
+                        $this->Html->link(
                             'Sign out',
                             array(
                                 'controller' => 'Users',
